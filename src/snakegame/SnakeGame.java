@@ -1,20 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
+
 package snakegame;
 
-/**
- *
- * @author HP
- */
-public class SnakeGame {
+import javax.swing.*;
 
-    /**
-     * @param args the command line arguments
-     */
+public class SnakeGame extends JFrame { 
+
+    SnakeGame(){
+        super("Snake Game");
+        add(new Board());
+        pack();
+        
+        
+        setSize(300,300);
+        setLocationRelativeTo(null);
+        setVisible(true);
+        
+     
+    }
     public static void main(String[] args) {
-        // TODO code application logic here
+        new SnakeGame();
     }
     
 }
