@@ -13,9 +13,9 @@ public class Board extends JPanel implements ActionListener {
     private Image dot;
     private Image head;
     
-    private final int ALL_DOTS =90000;
+    private final int ALL_DOTS =900;
     private final int DOT_SIZE = 10;
-    private final int RANDOM_POSITION = 29;
+    private final int RANDOM_POSITION = 28;
 
     private int apple_x;
     private int apple_y;
@@ -29,12 +29,14 @@ public class Board extends JPanel implements ActionListener {
     private boolean upDirection = false;
     private boolean downDirection = false;
     
+    private boolean inGame = true;
+    
     
     Board(){
-        addKeyListener(new TAdapter());
-        
+         addKeyListener(new TAdapter());
         
         setBackground(Color.BLACK);
+        setPreferredSize(new Dimension(300, 300));
         setFocusable(true);
         
         loadImages();
@@ -82,6 +84,7 @@ public class Board extends JPanel implements ActionListener {
         }
         
         public void draw(Graphics g){
+            if(inGame){
             g.drawImage(apple,apple_x, apple_y, this);
             
             for(int i=0; i<dots; i++){
@@ -96,7 +99,18 @@ public class Board extends JPanel implements ActionListener {
             }
             Toolkit.getDefaultToolkit().sync();
             
-        }
+        } else{
+                gameOver(g);
+            }
+
+           }
+           public void gameOver(Graphics g){
+                String msg = "Game Over!";
+                Font font = new Font("SAN SERIF", Font.BOLD, 14);
+                FontMetrics metrices = getFontMetrics(font);
+                
+                g.drawString(msg, (300- metrices.stringWidth(msg))/2, 300/2);
+            }
         public void move(){
             for( int i=dots; i> 0; i--){
                 x[i] = x[i-1];
@@ -122,8 +136,59 @@ public class Board extends JPanel implements ActionListener {
 //            y[0] += DOT_SIZE;
         }
         
+        public void checkApple(){
+            if ((x[0] == apple_x) && (y[0] == apple_y)){
+                dots++;
+                locateApple();
+                
+            }
+            
+        }
+        
+        public void checkCollision(){
+            for(int i = dots; i> 0; i--){
+                if((i>4) && (x[0] == x[i]) && (y[0] == y[i]) ){
+                    
+                    inGame = false;
+                    
+                }
+            }
+             
+                if(y[0] >= 300){
+                    
+                    inGame = false;
+                    
+                }
+                if(x[0] >= 300){
+                    
+                    inGame = false;
+                    
+                }
+                if(y[0] < 0){
+                    
+                    inGame = false;
+                    
+                }
+                if(x[0] < 0){
+                    
+                    inGame = false;
+                    
+                }
+                if(!inGame){
+                    timer.stop();
+                }
+                
+            
+            
+            
+        }
+        
         public void actionPerformed(ActionEvent e){
+           if(inGame){
+            checkApple();
+            checkCollision();
             move();
+           }
             repaint();
         }       
         public class TAdapter extends KeyAdapter {
