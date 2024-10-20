@@ -5,8 +5,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Board extends JPanel {
+public class Board extends JPanel implements ActionListener {
     private int dots;
+    private Timer timer;
     
     private Image apple;
     private Image dot;
@@ -14,16 +15,25 @@ public class Board extends JPanel {
     
     private final int ALL_DOTS =90000;
     private final int DOT_SIZE = 10;
-    private final int RANDOM_POSITION = 10;
+    private final int RANDOM_POSITION = 29;
 
     private int apple_x;
     private int apple_y;
     
+    
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
     
+    private boolean leftDirection = false;
+    private boolean rightDirection = true;
+    private boolean upDirection = false;
+    private boolean downDirection = false;
+    
     
     Board(){
+        addKeyListener(new TAdapter());
+        
+        
         setBackground(Color.BLACK);
         setFocusable(true);
         
@@ -49,6 +59,9 @@ public class Board extends JPanel {
             x[i] = 50 - i * DOT_SIZE;
                 }
             locateApple();
+            
+            Timer timer = new Timer(140, this);
+            timer.start();
         }
       
         public void locateApple(){
@@ -84,5 +97,61 @@ public class Board extends JPanel {
             Toolkit.getDefaultToolkit().sync();
             
         }
+        public void move(){
+            for( int i=dots; i> 0; i--){
+                x[i] = x[i-1];
+                y[i] = y[i-1];
+                    
+            }
+            if(leftDirection){
+                x[0] = x[0] - DOT_SIZE;
+            }
+            if(rightDirection){
+                x[0] = x[0] + DOT_SIZE;
+            }
+            if(upDirection){
+                y[0] = y[0] - DOT_SIZE;
+            }
+            if(downDirection){
+                y[0] = y[0] + DOT_SIZE;
+            }
+            
+            
+            
+//            x[0] += DOT_SIZE;
+//            y[0] += DOT_SIZE;
+        }
         
+        public void actionPerformed(ActionEvent e){
+            move();
+            repaint();
+        }       
+        public class TAdapter extends KeyAdapter {
+            @Override
+            public void keyPressed(KeyEvent e){
+                int key = e.getKeyCode();
+                
+                if(key  == KeyEvent.VK_LEFT && (!rightDirection)){
+                    leftDirection = true;
+                    upDirection = false;
+                    downDirection = false;
+                }
+                if(key  == KeyEvent.VK_RIGHT && (!leftDirection)){
+                    rightDirection = true;
+                    upDirection = false;
+                    downDirection = false;
+                }
+                if(key  == KeyEvent.VK_UP && (!downDirection)){
+                    upDirection = true;
+                    leftDirection = false;
+                    rightDirection = false;
+                }
+                if(key  == KeyEvent.VK_DOWN && (!upDirection)){
+                    downDirection = true;
+                    leftDirection = false;
+                    rightDirection = false;
+                }
+                
+            }
+        }
 }
