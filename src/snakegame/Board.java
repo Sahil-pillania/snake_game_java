@@ -107,6 +107,8 @@ public class Board extends JPanel implements ActionListener {
            public void gameOver(Graphics g){
                 String msg = "Game Over!";
                 Font font = new Font("SAN SERIF", Font.BOLD, 14);
+                g.setColor(Color.WHITE);
+                g.setFont(font);
                 FontMetrics metrices = getFontMetrics(font);
                 
                 g.drawString(msg, (300- metrices.stringWidth(msg))/2, 300/2);
@@ -175,7 +177,13 @@ public class Board extends JPanel implements ActionListener {
                     
                 }
                 if(!inGame){
-                    timer.stop();
+//                    timer.stop();
+                    if (this.timer != null) {
+                        this.timer.stop();
+                    } else {
+                        System.out.println("Timer is not initialized.");
+                                        }
+
                 }
                 
             
